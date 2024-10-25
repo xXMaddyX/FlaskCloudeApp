@@ -80,7 +80,7 @@ def delete_file(file):
         return jsonify({"error": str(e)}), 500
 
 #----------------------------------------------------------------------------------------
-#------------------------------>>>>CREATE_FOLDER<<<<-------------------------------------
+#--------------------------------->>>>CREATE_FOLDER<<<<----------------------------------
 @app.route("/createFolder/<path:dirName>", methods=["POST"])
 def createDir(dirName):
     directory_path = os.path.join(UPLOAD_FOLDER, dirName)
@@ -89,7 +89,8 @@ def createDir(dirName):
     else:
         os.mkdir(directory_path)
         return jsonify({"msg": "Directory created"})
-    
+#----------------------------------------------------------------------------------------
+#---------------------------------->>>>UPLOAD_FILES<<<<----------------------------------
 @app.route("/upload", defaults={'subdir': ''}, methods=["POST"])
 @app.route("/upload/<path:subdir>", methods=["POST"])
 def upload_file(subdir):
