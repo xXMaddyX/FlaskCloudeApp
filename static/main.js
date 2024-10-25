@@ -1,12 +1,10 @@
 const fetchDataButton = document.querySelector("#load-data-button");
-
 const fileData = document.querySelector('.file-box-data');
 const folderData = document.querySelector('.folder-box-data');
-
 const uploadButton = document.querySelector('#uploadBtn');
 const createFolderButton = document.querySelector('#createFolderBtn');
-
 const folderInput = document.querySelector('#folderInput');
+const folderBackButton = document.querySelector('#folder-back-button');
 //---------------------------------------------------------------------------------
 const DataSystem = {
     foldersInSystem: [],
@@ -164,5 +162,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     createFolderButton.addEventListener('click', () => {
         createFolder();
+    });
+
+    folderBackButton.addEventListener("click", async () => {
+        if (DataSystem.prevFolders.length > 0) {
+            const lastFolder = DataSystem.prevFolders.pop();
+    
+            DataSystem.currentFolder = DataSystem.rootFolder;
+            DataSystem.prevFolders.forEach(folder => {
+                DataSystem.currentFolder += `/${folder}`;
+            });
+    
+            if (DataSystem.currentDownloadLink.endsWith(`/${lastFolder}`)) {
+                DataSystem.currentDownloadLink = DataSystem.currentDownloadLink.slice(0, -(`/${lastFolder}`).length);
+            };
+    
+            await reFetchCurrent(DataSystem.currentFolder);
+        } else {
+            alert("You are already at the root folder!");
+        };
     });
 });
