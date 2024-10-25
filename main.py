@@ -5,12 +5,12 @@ import urllib.parse
 app = Flask(__name__, static_folder="static")
 UPLOAD_FOLDER = "./files"
 
-#----------------------------->>>>MIDDEL_WARE<<<<----------------------------------
+#--------------------------------->>>>MIDDEL_WARE<<<<------------------------------------
 @app.route("/")
 def index():
     return send_file(os.path.join(app.static_folder, "index.html"))
-#----------------------------------------------------------------------------------
-#-------------------------->>>>FILE_AND_DIR_LOAD<<<<-------------------------------
+#----------------------------------------------------------------------------------------
+#------------------------------>>>>FILE_AND_DIR_LOAD<<<<---------------------------------
 @app.route("/files")
 def list_root_dir():
     dir_and_files = os.listdir(UPLOAD_FOLDER)
@@ -29,7 +29,7 @@ def list_root_dir():
         })
     except Exception as e:
         return jsonify({"error", str(e)}), 500      
-    
+
 @app.route("/files/<path:subdir>")
 def list_items_in_selected_dir(subdir):
     targetDir = os.path.join(UPLOAD_FOLDER, subdir)
@@ -89,7 +89,24 @@ def createDir(dirName):
     else:
         os.mkdir(directory_path)
         return jsonify({"msg": "Directory created"})
-
-
+    
+@app.route("/upload", defaults={'subdir': ''}, methods=["POST"])
+@app.route("/upload/<path:subdir>", methods=["POST"])
+def upload_file(subdir):
+    target_folder = os.path.join(UPLOAD_FOLDER, subdir)
+    
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    
+    file_path = os.path.join(target_folder, file.filename)
+    file.save(file_path)
+    
+    return jsonify({"msg": "File uploaded successfully", "filename": file.filename}), 200
+        
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000)

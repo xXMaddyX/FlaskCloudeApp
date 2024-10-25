@@ -129,8 +129,29 @@ const createFolder = async () => {
 };
 //----------------------------------------------------------------------------------
 //----------------------------->>>>UPLOAD_FILES<<<<---------------------------------
-const uploadFiles = () => {
+const uploadFiles = async () => {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    console.log(DataSystem.currentDownloadLink)
+    if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
 
+        const response = await fetch(`/upload${DataSystem.currentDownloadLink}`, {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.msg);
+            await reFetchCurrent(DataSystem.currentFolder);
+        } else {
+            alert(result.error);
+        }
+    } else {
+        alert('Please select a file to upload.');
+    }
 };
 //----------------------------------------------------------------------------------
 //------------------------->>>>ON_DOM_CONETENT_LOADED<<<<---------------------------
@@ -138,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetchOntartup()
 
     uploadButton.addEventListener('click', () => {
-
+        uploadFiles();
     });
 
     createFolderButton.addEventListener('click', () => {
