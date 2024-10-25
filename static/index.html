@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="index.css">
-    <script src="./index.js" type="module" defer></script>
+    <link rel="stylesheet" href="/static/index.css">
+    <script src="/static/main.js" type="module" defer></script>
 </head>
 <body>
     <div class="app-box">
@@ -13,7 +13,18 @@
             <div class="app-header">
                 <h1>Willkommen bei Pieps Cloude</h1>
             </div>
-            <div class="app-file-content">
+            <div class="app-folder-content">
+                <div class="app-folder-box">
+                    <div class="folder-box-header">
+                        <h3>Directorys</h3>
+                    </div>
+                    <div class="folder-box-data">
+
+                    </div>
+                    <div class="folder-box-button">
+                        <button id="load-data-button">Refresh folder List</button>
+                    </div>
+                </div>
                 <div class="app-file-box">
                     <div class="file-box-header">
                         <h3>Files at System</h3>
@@ -24,6 +35,15 @@
                     <div class="file-box-button">
                         <button id="load-data-button">Refresh File List</button>
                     </div>
+                </div>
+            </div>
+            <div class="app-create-folder-box">
+                <div class="app-create-folder-header">
+                    <h3>Create new Folder</h3>
+                </div>
+                <div class="app-create-folder-form">
+                    <input type="text" placeholder="Enter Folder Name" id="folderInput">
+                    <button id="createFolderBtn">Create</button>
                 </div>
             </div>
             <div class="app-file-upload-box">

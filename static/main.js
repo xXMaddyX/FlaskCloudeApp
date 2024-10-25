@@ -1,0 +1,105 @@
+const fetchDataButton = document.querySelector("#load-data-button");
+const fileData = document.querySelector('.file-box-data');
+const folderData = document.querySelector('.folder-box-data');
+const uploadButton = document.querySelector('#uploadBtn');
+
+const DataSystem = {
+    foldersInSystem: [],
+    filesInSystem: [],
+    rootFolder: "/files",
+    prevFolders: [],
+    currentFolder: "",
+    currentDownloadLink: "",
+};
+DataSystem.currentFolder = DataSystem.rootFolder
+
+const fetchOntartup = async () => {
+    const resp = await fetch(`http://127.0.0.1:3000${DataSystem.rootFolder}`)
+    const data = await resp.json(resp)
+    DataSystem.foldersInSystem = data["folders"]
+    DataSystem.filesInSystem = data["files"]
+    showDirs();
+    showFiles();
+};
+
+const reFetchCurrent = async (newfolder) => {
+    const newFetchData = await fetch(newfolder);
+    const data = await newFetchData.json();
+    DataSystem.foldersInSystem = data["folders"]
+    DataSystem.filesInSystem = data["files"]
+    resetFileContainers();
+    showDirs();
+    showFiles();
+};
+
+const showDirs = () => {
+    DataSystem.foldersInSystem.forEach((item) => {
+        const folderBox = document.createElement("div");
+        folderBox.classList.add("folder-element");
+    
+        const element = document.createElement("li");
+        element.innerHTML = `<a class="folder">(DIR): ${item}</a>`
+        element.addEventListener("click", async () => {
+            DataSystem.prevFolders.push(item);
+
+            const newFolder = DataSystem.currentFolder + `/${item}`;
+            DataSystem.currentFolder = newFolder;
+            DataSystem.currentDownloadLink = DataSystem.currentDownloadLink + `/${item}`
+            reFetchCurrent(newFolder)
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete Folder";
+
+        deleteButton.addEventListener('click', async () => {
+            const response = await fetch(`/delete/${item}`, {
+                method: 'DELETE',  
+            });
+            if (response.ok) {
+                alert(`${item} deleted successfully`);
+                await reFetchCurrent(DataSystem.currentFolder);
+            } else {
+                alert('File deletion failed');
+            };
+        });
+        folderBox.append(element, deleteButton)
+        folderData.appendChild(folderBox)
+    });
+};
+
+const showFiles = () => {
+    DataSystem.filesInSystem.forEach((item) => {
+        const fileBox = document.createElement("div");
+        fileBox.classList.add("file-element");
+    
+        const element = document.createElement("li");
+        element.innerHTML = `<a class="file" href="/download${DataSystem.currentDownloadLink}/${item}">${item}</a>`
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete File";
+
+        deleteButton.addEventListener('click', async () => {
+            const response = await fetch(`/delete${DataSystem.currentDownloadLink}/${item}`, {
+                method: 'DELETE',  
+            });
+            if (response.ok) {
+                alert(`${item} deleted successfully`);
+                await reFetchCurrent(DataSystem.currentFolder);
+            } else {
+                alert('File deletion failed');
+            };
+        });
+        fileBox.append(element, deleteButton)
+        fileData.appendChild(fileBox)
+    });
+}
+
+const resetFileContainers = () => {
+    fileData.innerHTML = "";
+    folderData.innerHTML = "";
+};
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await fetchOntartup()
+})

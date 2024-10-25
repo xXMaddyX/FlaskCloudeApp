@@ -110,3 +110,39 @@ body {
     background-color: rgb(170, 170, 170);
 }
 
+
+.app-create-folder-box {
+    display: flex;
+    min-width: 80%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid gray;
+    margin-bottom: 20px;
+}
+
+.app-create-folder-header {
+    margin-bottom: 20px;
+}
+
+.app-create-folder-form {
+    display: flex;
+    max-width: 250px;
+    min-width: 250px;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#folderInput {
+    padding: 5px;
+    color: black;
+    text-shadow: none;
+}
+
+#createFolderBtn {
+    color: black;
+    font-weight: 800;
+    padding: 5px;
+    background-color: rgb(170, 170, 170);
+}

@@ -2,24 +2,66 @@ const fetchDataButton = document.querySelector("#load-data-button");
 const fileData = document.querySelector('.file-box-data');
 const uploadButton = document.querySelector('#uploadBtn');
 
-let filesInSystem = []
+const DataSystem = {
+    foldersInSystem: [],
+    filesInSystem: [],
+    defaultFolder: "files",
+    prevFolder: "",
+    currentFolder: ""
+}
 
-const fetchData = async () => {
-    const responceDate = await fetch("http://127.0.0.1:3000/files")
+//TODO_ADD FOLDER AND FILE LOAD
+
+const setCurrentFolder = (folder) => {
+    DataSystem.currentFolder = folder
+};
+
+const fetchFiles = async () => {
+    setCurrentFolder(DataSystem.defaultFolder)
+    console.log(DataSystem.currentFolder)
+    const responceDate = await fetch(`http://127.0.0.1:3000/${DataSystem.currentFolder}`)
     const files = await responceDate.json();
     files.forEach((file) => {
-        if (filesInSystem.includes(file)) {
+        if (DataSystem.filesInSystem.includes(file)) {
             return
         } else {
-            filesInSystem.push(file);
+            DataSystem.filesInSystem.push(file);
         };
     });
     fileData.innerHTML = "";
-    createListItem();
+    createListItem("files");
 };
 
-const createListItem = () => {
-    for (const fileItem of filesInSystem) {
+const createFileList = () => {
+    for (const fileItem of DataSystem.filesInSystem) {
+        const elementBox = document.createElement("div");
+        elementBox.classList.add("element-box");
+
+        const element = document.createElement("li");
+        element.innerHTML = `<a class="files" href="/download/${fileItem}">${fileItem}</a>`;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete File";
+        deleteButton.addEventListener('click', async () => {
+            const response = await fetch(`/delete/${fileItem}`, {
+                method: 'DELETE',  
+            });
+            if (response.ok) {
+                alert(`${fileItem} deleted successfully`);
+                DataSystem.filesInSystem = DataSystem.filesInSystem.filter(file => file !== fileItem);
+                await fetchFiles()
+            } else {
+                alert('File deletion failed');
+            }
+        })
+        elementBox.appendChild(element);
+        elementBox.appendChild(deleteButton);
+        fileData.appendChild(elementBox);
+    };
+}
+
+const createFolderList = () => {
+    for (const fileItem of DataSystem.filesInSystem) {
         const elementBox = document.createElement("div");
         elementBox.classList.add("element-box");
 
@@ -43,6 +85,19 @@ const createListItem = () => {
         elementBox.appendChild(element);
         elementBox.appendChild(deleteButton);
         fileData.appendChild(elementBox);
+    };
+}
+
+const createListItem = (typeOfData) => {
+    switch (typeOfData) {
+        case "files":
+            createFileList();
+            break
+        case "folders":
+            createFolderList();
+            break
+        default:
+            return
     };
  };
 
@@ -76,14 +131,14 @@ const uploadFile = async () => {
 
 document.addEventListener("DOMContentLoaded", async() => {
     fetchDataButton.addEventListener('click', async () => {
-        await fetchData();
+        await fetchFiles();
 
     });
 
     uploadButton.addEventListener('click', async () => {
         await uploadFile();
-        await fetchData();
+        await fetchFiles();
     });
 
-    await fetchData();
+    await fetchFiles();
 });
