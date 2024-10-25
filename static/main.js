@@ -2,7 +2,8 @@ const fetchDataButton = document.querySelector("#load-data-button");
 const fileData = document.querySelector('.file-box-data');
 const folderData = document.querySelector('.folder-box-data');
 const uploadButton = document.querySelector('#uploadBtn');
-
+const createFolderButton = document.querySelector('#createFolderBtn');
+//---------------------------------------------------------------------------------
 const DataSystem = {
     foldersInSystem: [],
     filesInSystem: [],
@@ -12,7 +13,8 @@ const DataSystem = {
     currentDownloadLink: "",
 };
 DataSystem.currentFolder = DataSystem.rootFolder
-
+//---------------------------------------------------------------------------------
+//----------------------------->>>>FETCH_FUNCTIONS<<<<-----------------------------
 const fetchOntartup = async () => {
     const resp = await fetch(`http://127.0.0.1:3000${DataSystem.rootFolder}`)
     const data = await resp.json(resp)
@@ -31,7 +33,8 @@ const reFetchCurrent = async (newfolder) => {
     showDirs();
     showFiles();
 };
-
+//---------------------------------------------------------------------------------
+//------------------------------>>>>RENDER_DIRS/FILES<<<<--------------------------
 const showDirs = () => {
     DataSystem.foldersInSystem.forEach((item) => {
         const folderBox = document.createElement("div");
@@ -52,7 +55,7 @@ const showDirs = () => {
         deleteButton.textContent = "Delete Folder";
 
         deleteButton.addEventListener('click', async () => {
-            const response = await fetch(`/delete/${item}`, {
+            const response = await fetch(`/delete${DataSystem.currentDownloadLink}/${item}`, {
                 method: 'DELETE',  
             });
             if (response.ok) {
@@ -92,14 +95,31 @@ const showFiles = () => {
         fileBox.append(element, deleteButton)
         fileData.appendChild(fileBox)
     });
-}
-
+};
 const resetFileContainers = () => {
     fileData.innerHTML = "";
     folderData.innerHTML = "";
 };
+//----------------------------------------------------------------------------------
+//---------------------------->>>>CREATE_FOLDERS<<<<--------------------------------
+const createFolder = () => {
 
+};
+//----------------------------------------------------------------------------------
+//----------------------------->>>>UPLOAD_FILES<<<<---------------------------------
+const uploadFiles = () => {
 
+};
+//----------------------------------------------------------------------------------
+//------------------------->>>>ON_DOM_CONETENT_LOADED<<<<---------------------------
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchOntartup()
-})
+
+    uploadButton.addEventListener('click', () => {
+
+    });
+
+    createFolderButton.addEventListener('click', () => {
+
+    });
+});

@@ -3,14 +3,14 @@ import os
 import urllib.parse
 
 app = Flask(__name__, static_folder="static")
-
 UPLOAD_FOLDER = "./files"
 
+#----------------------------->>>>MIDDEL_WARE<<<<----------------------------------
 @app.route("/")
 def index():
     return send_file(os.path.join(app.static_folder, "index.html"))
-
-
+#----------------------------------------------------------------------------------
+#-------------------------->>>>FILE_AND_DIR_LOAD<<<<-------------------------------
 @app.route("/files")
 def list_root_dir():
     dir_and_files = os.listdir(UPLOAD_FOLDER)
@@ -49,8 +49,8 @@ def list_items_in_selected_dir(subdir):
         })
     except Exception as e:
         return jsonify({"error", str(e)}), 500
-
-
+#----------------------------------------------------------------------------------------
+#------------------------------>>>>DOWNLOAD_FILES<<<<------------------------------------
 @app.route('/download/<path:file>')
 def download_file(file):
     try:
@@ -59,8 +59,8 @@ def download_file(file):
         return send_file(file_path, as_attachment=True)
     except FileNotFoundError:
         return "File not Found", 404
-    
-
+#----------------------------------------------------------------------------------------
+#------------------------------>>>>DELETE_FILES<<<<--------------------------------------
 @app.route('/delete/<path:file>', methods=["DELETE"])
 def delete_file(file):
     try:
@@ -73,8 +73,16 @@ def delete_file(file):
             return jsonify({"error": "File not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
+#----------------------------------------------------------------------------------------
+#------------------------------>>>>CREATE_FOLDER<<<<-------------------------------------
+@app.route("/createFolder/<path:dirName>", methods=["POST"])
+def createDir(dirName):
+    directory_path = os.path.join(UPLOAD_FOLDER, dirName)
+    if os.path.exists(directory_path):
+        return jsonify({"error": "Dir allready exists"}), 400
+    else:
+        os.mkdir(directory_path)
+        return jsonify({"msg": "Directory created"})
 
 #OLD_CODE
 """
