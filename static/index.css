@@ -25,6 +25,60 @@ body {
     align-items: center;
 }
 
+
+.app-folder-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 80%;
+    border-bottom: 1px solid gray;
+}
+
+.app-folder-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 80%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.folder-box-data {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(99, 99, 99);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 2px 2px 5px black;
+}
+
+.folder-element {
+    padding: 3px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.folder-element li {
+    cursor: pointer;
+}
+
+.folder-element button {
+    color: black;
+    padding: 5px;
+    border-radius: 10;
+    background-color: rgb(170, 170, 170);
+    cursor: pointer;
+}
+
+
 .app-file-content {
     margin-top: 30px;
     display: flex;
@@ -53,12 +107,12 @@ body {
     background-color: rgb(99, 99, 99);
     margin-bottom: 20px;
     border-radius: 10px;
-    padding: 5px;
+    padding: 10px;
     box-shadow: 2px 2px 5px black;
 }
 
-.element-box {
-    padding: 5px;
+.file-element {
+    padding: 3px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -67,7 +121,7 @@ body {
     font-weight: 600;
 }
 
-.element-box button {
+.file-element button {
     color: black;
     padding: 5px;
     border-radius: 10;
@@ -119,6 +173,7 @@ body {
     justify-content: center;
     border-bottom: 1px solid gray;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .app-create-folder-header {
