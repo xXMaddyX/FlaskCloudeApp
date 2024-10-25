@@ -61,18 +61,24 @@ def download_file(file):
         return "File not Found", 404
 #----------------------------------------------------------------------------------------
 #------------------------------>>>>DELETE_FILES<<<<--------------------------------------
+import shutil 
 @app.route('/delete/<path:file>', methods=["DELETE"])
 def delete_file(file):
     try:
         decoded_file = urllib.parse.unquote(file)
         file_path = os.path.join(UPLOAD_FOLDER, decoded_file)
-        if os.path.exists(file_path):
+        
+        if os.path.isfile(file_path):
             os.remove(file_path)
             return jsonify({"message": "File deleted"}), 200
+        elif os.path.isdir(file_path):
+            shutil.rmtree(file_path)
+            return jsonify({"message": "Directory deleted"}), 200
         else:
-            return jsonify({"error": "File not found"}), 404
+            return jsonify({"error": "File or directory not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 #----------------------------------------------------------------------------------------
 #------------------------------>>>>CREATE_FOLDER<<<<-------------------------------------
 @app.route("/createFolder/<path:dirName>", methods=["POST"])
@@ -83,42 +89,6 @@ def createDir(dirName):
     else:
         os.mkdir(directory_path)
         return jsonify({"msg": "Directory created"})
-
-#OLD_CODE
-"""
-
-@app.route('/delete/<path:file>', methods=["DELETE"])
-def delete_file(file):
-    try:
-        decoded_file = urllib.parse.unquote(file)
-        file_path = os.path.join(currentFolder, decoded_file)
-        if os.path.exists(file_path):
-            os.remove(file_path)
-            return jsonify({"message": "File deleted"}), 200
-        else:
-            return jsonify({"error": "File not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/upload", methods=["POST"])
-def upload_file():
-    if 'file' not in request.files:
-        return "No File Part"
-    file = request.files["file"]
-    if file.filename == "":
-        return "no file selected"
-    if file:
-        file.save(os.path.join(currentFolder, file.filename))
-        return "File uploaded"
-
-@app.route("/createFolder/<dirName>", methods=["POST"])
-def createDir(dirName):
-    directory_path = os.path.join(currentFolder, dirName)
-    if os.path.exists(directory_path):
-        return jsonify({"error": "Dir allready exists"}), 400
-    else:
-        os.mkdir(directory_path)
-        return jsonify({"msg": "Directory created"})"""
 
 
 if __name__ == "__main__":

@@ -1,8 +1,12 @@
 const fetchDataButton = document.querySelector("#load-data-button");
+
 const fileData = document.querySelector('.file-box-data');
 const folderData = document.querySelector('.folder-box-data');
+
 const uploadButton = document.querySelector('#uploadBtn');
 const createFolderButton = document.querySelector('#createFolderBtn');
+
+const folderInput = document.querySelector('#folderInput');
 //---------------------------------------------------------------------------------
 const DataSystem = {
     foldersInSystem: [],
@@ -55,6 +59,7 @@ const showDirs = () => {
         deleteButton.textContent = "Delete Folder";
 
         deleteButton.addEventListener('click', async () => {
+            console.log(DataSystem.currentFolder)
             const response = await fetch(`/delete${DataSystem.currentDownloadLink}/${item}`, {
                 method: 'DELETE',  
             });
@@ -102,8 +107,25 @@ const resetFileContainers = () => {
 };
 //----------------------------------------------------------------------------------
 //---------------------------->>>>CREATE_FOLDERS<<<<--------------------------------
-const createFolder = () => {
+const createFolder = async () => {
+    const folderValue = folderInput.value.trim();
+    folderInput.value = "";
 
+    if (folderValue) {
+        const response = await fetch(`/createFolder${DataSystem.currentDownloadLink}/${folderValue}`, {
+            method: "POST"
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.msg);
+            await reFetchCurrent(DataSystem.currentFolder);
+        } else {
+            alert(result.error);
+        }
+    } else {
+        alert("Folder name cannot be empty.");
+    }
 };
 //----------------------------------------------------------------------------------
 //----------------------------->>>>UPLOAD_FILES<<<<---------------------------------
@@ -120,6 +142,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     createFolderButton.addEventListener('click', () => {
-
+        createFolder();
     });
 });
