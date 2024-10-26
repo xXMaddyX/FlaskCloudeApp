@@ -131,26 +131,45 @@ const uploadFiles = async () => {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
     console.log(DataSystem.currentDownloadLink)
+
     if (file) {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch(`/upload${DataSystem.currentDownloadLink}`, {
-            method: 'POST',
-            body: formData
-        });
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `/upload${DataSystem.currentDownloadLink}`, true);
 
-        const result = await response.json();
-        if (response.ok) {
-            alert(result.msg);
-            await reFetchCurrent(DataSystem.currentFolder);
-        } else {
-            alert(result.error);
-        }
+        // Fortschrittsanzeige
+        xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+                console.log(`Upload progress: ${percentComplete.toFixed(2)}%`);
+                // Hier kannst du den Fortschritt im DOM anzeigen, z.B. in einer Progress Bar
+                const progressBar = document.getElementById("uploadProgressBar");
+                progressBar.style.width = `${percentComplete}%`;
+            }
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const result = JSON.parse(xhr.responseText);
+                alert(result.msg);
+                reFetchCurrent(DataSystem.currentFolder);
+            } else {
+                alert('Upload failed.');
+            }
+        };
+
+        xhr.onerror = function () {
+            alert('Upload error.');
+        };
+
+        xhr.send(formData);
     } else {
         alert('Please select a file to upload.');
     }
 };
+
 //----------------------------------------------------------------------------------
 //------------------------->>>>ON_DOM_CONETENT_LOADED<<<<---------------------------
 document.addEventListener("DOMContentLoaded", async () => {

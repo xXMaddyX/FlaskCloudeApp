@@ -243,3 +243,12 @@ body {
     padding: 5px;
     background-color: rgb(170, 170, 170);
 }
+
+#progressContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
