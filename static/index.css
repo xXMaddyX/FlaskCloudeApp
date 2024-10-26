@@ -3,6 +3,7 @@
     padding: 0px;
     box-sizing: border-box;
     color: rgb(200, 200, 200);
+    overflow-x: hidden;
 }
 
 body {
@@ -182,6 +183,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-bottom: 50px;
 }
 
 .app-file-upload-box-header {

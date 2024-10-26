@@ -144,7 +144,6 @@ const uploadFiles = async () => {
             if (event.lengthComputable) {
                 const percentComplete = (event.loaded / event.total) * 100;
                 console.log(`Upload progress: ${percentComplete.toFixed(2)}%`);
-                // Hier kannst du den Fortschritt im DOM anzeigen, z.B. in einer Progress Bar
                 const progressBar = document.getElementById("uploadProgressBar");
                 progressBar.style.width = `${percentComplete}%`;
             }
@@ -154,6 +153,8 @@ const uploadFiles = async () => {
             if (xhr.status === 200) {
                 const result = JSON.parse(xhr.responseText);
                 alert(result.msg);
+                const progressBar = document.getElementById("uploadProgressBar");
+                progressBar.style.width = "0%"
                 reFetchCurrent(DataSystem.currentFolder);
             } else {
                 alert('Upload failed.');
