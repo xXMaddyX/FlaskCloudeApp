@@ -24,8 +24,9 @@ DataSystem.currentFolder = DataSystem.rootFolder
 
 const STATES = {
     renameBoxState: false,
-    renameBoxFilePath: ""
-}
+    renameBoxFilePath: "",
+    currentFileName: "",
+};
 //---------------------------------------------------------------------------------
 //----------------------------->>>>FETCH_FUNCTIONS<<<<-----------------------------
 const fetchOntartup = async () => {
@@ -135,6 +136,7 @@ const showAndHideBox = (target_box, target_State) => {
             }
     return target_State
 };
+
 //----------------------------------------------------------------------------------
 //---------------------------->>>>CREATE_FOLDERS<<<<--------------------------------
 const createFolder = async () => {
@@ -235,16 +237,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     });
 
-    renameBoxOkBtn.addEventListener('click', () => {
+    renameBoxOkBtn.addEventListener('click', async () => {
         STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
         let inputVal = renameBoxInput.value;
         renameBoxInput.value = "";
 
         const testFetchObj = {
-            currentPath: STATES.renameBoxFilePath,
-            nameToChange: inputVal
+            currentFilePath: STATES.renameBoxFilePath,
+            currentPath: DataSystem.currentDownloadLink,
+            fileName: STATES.renameBoxFilePath.split("/").pop(),
+            nameToChange: inputVal,
         };
-        console.log(testFetchObj);
+        
+        const responce = await fetch(`/rename_file`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(testFetchObj)
+        });
+        await reFetchCurrent(DataSystem.currentFolder);
+        let data = await responce.json();
+        alert(data.msg)
     });
 
     renameBoxCancelBtn.addEventListener('click', () => {
