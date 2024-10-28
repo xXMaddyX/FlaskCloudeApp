@@ -112,17 +112,20 @@ def upload_file(subdir):
 #-------------------------------->>>>RENAME_FILES<<<<------------------------------------
 @app.route("/rename_file", methods=["POST"])
 def rename_file():
-    data = request.get_json()
-    _ ,fileEnding = os.path.splitext(data["currentFilePath"])
+    try:
+        data = request.get_json()
+        _ ,fileEnding = os.path.splitext(data["currentFilePath"])
 
-    if data["nameToChange"] == "":
-        return jsonify({"msg": "You didnt Enter new FileName!!!"})
-    
-    current_file_path = os.path.join(UPLOAD_FOLDER, data["currentFilePath"].lstrip("/"))
-    change_to_path = os.path.join(UPLOAD_FOLDER, data["currentPath"].lstrip("/"), data["nameToChange"] + fileEnding)
-    os.rename(current_file_path, change_to_path)
+        if data["nameToChange"] == "":
+            return jsonify({"msg": "You didnt Enter new FileName!!!"})
+        
+        current_file_path = os.path.join(UPLOAD_FOLDER, data["currentFilePath"].lstrip("/"))
+        change_to_path = os.path.join(UPLOAD_FOLDER, data["currentPath"].lstrip("/"), data["nameToChange"] + fileEnding)
+        os.rename(current_file_path, change_to_path)
 
-    return jsonify({"msg": "File Renamed"})
+        return jsonify({"msg": "File Renamed"})
+    except Exception as e:
+        return jsonify({"msg": e})
 #-----------------------------------------------------------------------------------------
 #-------------------------------->>>>RENAME_FOLDERS<<<<-----------------------------------
 
