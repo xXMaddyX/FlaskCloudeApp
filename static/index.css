@@ -149,10 +149,12 @@ body {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 50px;
     font-weight: 600;
 }
 
+.file-element-btn-box {
+    gap: 5px;
+}
 
 .file-element a:hover {
     color: white;
@@ -169,13 +171,6 @@ body {
 
 .file-element button:hover {
     background-color: red;
-}
-
-#load-data-button {
-    color: black;
-    font-weight: 800;
-    padding: 5px;
-    background-color: rgb(170, 170, 170);
 }
 
 .app-file-upload-box {
@@ -253,4 +248,83 @@ body {
     align-items: center;
     margin-top: 10px;
     gap: 10px;
+}
+
+.app-rename-file-box {
+    visibility: hidden;
+    opacity: 0;
+    top: 50%;
+    transform: translateY(-100%);
+    padding: 20px;
+    min-width: 400px;
+    min-height: 200px;
+    box-shadow: 2px 2px 5px black;
+    border: 1px solid rgb(0, 0, 0);
+    background-color: rgb(80, 80, 80);
+    border-radius: 10px;
+    transform: translate();
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    transition-property: "visibility", "opacity";
+    transition-duration: 0.5s;
+}
+.open{
+    visibility: visible;
+    opacity: 1;
+}
+
+.app-rename-file-box-content {
+    display: flex;
+    margin-top: 5px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+#file-rename-input {
+    font-size: 18px;
+    background-color: gray;
+    min-height: 30px;
+    min-width: 300px;
+}
+
+.app-rename-file-box-button-box {
+    visibility: hidden;
+    opacity: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.open .app-rename-file-box-button-box {
+    visibility: visible;
+    opacity: 1;
+}
+
+#file-rename-ok-btn {
+    color: black;
+    font-weight: 800;
+    min-width: 100px;
+    padding: 5px;
+    background-color: rgb(170, 170, 170);
+    transition-property: "background-color";
+    transition-duration: .5s;
+}
+#file-rename-ok-btn:hover {
+    background-color: rgb(30, 255, 0);
+}
+
+#file-rename-c-button {
+    color: black;
+    font-weight: 800;
+    min-width: 100px;
+    padding: 5px;
+    background-color: rgb(170, 170, 170);
+    transition-property: "background-color";
+    transition-duration: .5s;
+}
+#file-rename-c-button:hover {
+    background-color: red;
 }

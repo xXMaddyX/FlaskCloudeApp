@@ -108,6 +108,13 @@ def upload_file(subdir):
     file.save(file_path)
     
     return jsonify({"msg": "File uploaded successfully", "filename": file.filename}), 200
-        
+
+
+#TODO_IMPLEMENT RENAME OF FILES
+@app.route("/rename_file")
+def rename_file():
+    data = request.get_json()
+    print(data)
+    
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000)

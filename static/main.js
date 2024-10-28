@@ -5,6 +5,10 @@ const uploadButton = document.querySelector('#uploadBtn');
 const createFolderButton = document.querySelector('#createFolderBtn');
 const folderInput = document.querySelector('#folderInput');
 const folderBackButton = document.querySelector('#folder-back-button');
+
+const renameBox = document.querySelector('.app-rename-file-box');
+const renameBoxOkBtn = document.querySelector('#file-rename-ok-btn');
+const renameBoxCancelBtn = document.querySelector('#file-rename-c-button');
 //---------------------------------------------------------------------------------
 const DataSystem = {
     foldersInSystem: [],
@@ -15,6 +19,12 @@ const DataSystem = {
     currentDownloadLink: "",
 };
 DataSystem.currentFolder = DataSystem.rootFolder
+
+
+const STATES = {
+    renameBoxState: false,
+    renameBoxFilePath: ""
+}
 //---------------------------------------------------------------------------------
 //----------------------------->>>>FETCH_FUNCTIONS<<<<-----------------------------
 const fetchOntartup = async () => {
@@ -81,9 +91,11 @@ const showFiles = () => {
         const element = document.createElement("li");
         element.innerHTML = `<a class="file" href="/download${DataSystem.currentDownloadLink}/${item}">${item}</a>`
 
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete File";
+        const fileBtnBox = document.createElement("div");
+        fileBtnBox.classList.add("file-element-btn-box");
 
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
         deleteButton.addEventListener('click', async () => {
             const response = await fetch(`/delete${DataSystem.currentDownloadLink}/${item}`, {
                 method: 'DELETE',  
@@ -95,14 +107,34 @@ const showFiles = () => {
                 alert('File deletion failed');
             };
         });
-        fileBox.append(element, deleteButton)
-        fileData.appendChild(fileBox)
+
+        const renameButton = document.createElement("button");
+        renameButton.textContent = "Rename";
+        renameButton.addEventListener("click", async () => {
+            STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
+            STATES.renameBoxFilePath = DataSystem.currentDownloadLink + `/${item}`
+        });
+
+        fileBtnBox.append(deleteButton, renameButton);
+        fileBox.append(element, fileBtnBox);
+        fileData.appendChild(fileBox);
     });
 };
 const resetFileContainers = () => {
     fileData.innerHTML = "";
     folderData.innerHTML = "";
 };
+
+const showAndHideBox = (target_box, target_State) => {
+    target_State = !target_State
+            console.log(target_State)
+            if (target_State) {
+                target_box.classList.add("open")
+            } else {
+                target_box.classList.remove("open")
+            }
+    return target_State
+}
 //----------------------------------------------------------------------------------
 //---------------------------->>>>CREATE_FOLDERS<<<<--------------------------------
 const createFolder = async () => {
@@ -201,5 +233,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             alert("You are already at the root folder!");
         };
+    });
+
+    renameBoxOkBtn.addEventListener('click', () => {
+        STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
+        //Das muss als Fetch an den server zusammen mit dem neuen namen
+        const testFetchObj = {
+            currentPath: STATES.renameBoxFilePath,
+            nameToChange: "New User Input"
+        };
+        console.log(testFetchObj)
+    });
+
+    renameBoxCancelBtn.addEventListener('click', () => {
+        STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
     });
 });
