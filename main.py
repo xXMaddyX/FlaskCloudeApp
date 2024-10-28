@@ -108,22 +108,28 @@ def upload_file(subdir):
     file.save(file_path)
     
     return jsonify({"msg": "File uploaded successfully", "filename": file.filename}), 200
-
-
-#TODO_IMPLEMENT RENAME OF FILES
+#----------------------------------------------------------------------------------------
+#-------------------------------->>>>RENAME_FILES<<<<------------------------------------
 @app.route("/rename_file", methods=["POST"])
 def rename_file():
     data = request.get_json()
+    _ ,fileEnding = os.path.splitext(data["currentFilePath"])
 
     if data["nameToChange"] == "":
         return jsonify({"msg": "You didnt Enter new FileName!!!"})
     
     current_file_path = os.path.join(UPLOAD_FOLDER, data["currentFilePath"].lstrip("/"))
-    change_to_path = os.path.join(UPLOAD_FOLDER, data["currentPath"].lstrip("/"), data["nameToChange"])
+    change_to_path = os.path.join(UPLOAD_FOLDER, data["currentPath"].lstrip("/"), data["nameToChange"] + fileEnding)
     os.rename(current_file_path, change_to_path)
 
     return jsonify({"msg": "File Renamed"})
+#-----------------------------------------------------------------------------------------
+#-------------------------------->>>>RENAME_FOLDERS<<<<-----------------------------------
 
-    
+#--------TO_DO_RENAME_FOLDERS-------->
+@app.route("/rename_files", methods=["POST"])
+def rename_folders():
+    pass
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000)
