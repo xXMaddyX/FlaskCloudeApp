@@ -9,6 +9,7 @@ const folderBackButton = document.querySelector('#folder-back-button');
 const renameBox = document.querySelector('.app-rename-file-box');
 const renameBoxOkBtn = document.querySelector('#file-rename-ok-btn');
 const renameBoxCancelBtn = document.querySelector('#file-rename-c-button');
+const renameBoxInput = document.querySelector('#file-rename-input');
 //---------------------------------------------------------------------------------
 const DataSystem = {
     foldersInSystem: [],
@@ -127,14 +128,13 @@ const resetFileContainers = () => {
 
 const showAndHideBox = (target_box, target_State) => {
     target_State = !target_State
-            console.log(target_State)
             if (target_State) {
                 target_box.classList.add("open")
             } else {
                 target_box.classList.remove("open")
             }
     return target_State
-}
+};
 //----------------------------------------------------------------------------------
 //---------------------------->>>>CREATE_FOLDERS<<<<--------------------------------
 const createFolder = async () => {
@@ -237,12 +237,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     renameBoxOkBtn.addEventListener('click', () => {
         STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
-        //Das muss als Fetch an den server zusammen mit dem neuen namen
+        let inputVal = renameBoxInput.value;
+        renameBoxInput.value = "";
+
         const testFetchObj = {
             currentPath: STATES.renameBoxFilePath,
-            nameToChange: "New User Input"
+            nameToChange: inputVal
         };
-        console.log(testFetchObj)
+        console.log(testFetchObj);
     });
 
     renameBoxCancelBtn.addEventListener('click', () => {
