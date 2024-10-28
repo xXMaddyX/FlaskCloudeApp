@@ -308,7 +308,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         await reFetchCurrent(DataSystem.currentFolder);
 
         let data = await responce.json();
-        alert(data.msg)
-        console.log(postData)
-    })
+        alert(data.msg);
+    });
+    renameFolderBoxCancelBtn.addEventListener('click', () => {
+        STATES.folderRenameBoxState = showAndHideBox(renamefolderBox, STATES.folderRenameBoxState);
+    });
 });
