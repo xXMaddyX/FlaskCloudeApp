@@ -128,11 +128,21 @@ def rename_file():
         return jsonify({"msg": e})
 #-----------------------------------------------------------------------------------------
 #-------------------------------->>>>RENAME_FOLDERS<<<<-----------------------------------
-
-#--------TO_DO_RENAME_FOLDERS-------->
-@app.route("/rename_files", methods=["POST"])
+@app.route("/rename_folders", methods=["POST"])
 def rename_folders():
-    pass
+    try:
+        data = request.get_json()
+
+        if data["nameToChange"] == "":
+            return jsonify({"msg": "You didnt Enter a new Folder Name!!!"})
+        
+        current_folder_path = os.path.join(UPLOAD_FOLDER, data["folderName"].lstrip("/"))
+        change_to_folder = os.path.join(UPLOAD_FOLDER, data["nameToChange"])
+
+        os.rename(current_folder_path, change_to_folder)
+        return jsonify({"msg": "Folder Renamed"})
+    except Exception as e:
+        return jsonify({"msg": e})
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000)

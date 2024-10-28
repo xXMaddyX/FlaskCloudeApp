@@ -10,6 +10,11 @@ const renameBox = document.querySelector('.app-rename-file-box');
 const renameBoxOkBtn = document.querySelector('#file-rename-ok-btn');
 const renameBoxCancelBtn = document.querySelector('#file-rename-c-button');
 const renameBoxInput = document.querySelector('#file-rename-input');
+
+const renamefolderBox = document.querySelector('.app-rename-folder-box');
+const renameFolderBoxOkBtn = document.querySelector('#folder-rename-ok-btn');
+const renameFolderBoxCancelBtn = document.querySelector('#folder-rename-c-button');
+const ranameFolderBoxInput = document.querySelector('#folder-rename-input');
 //---------------------------------------------------------------------------------
 const DataSystem = {
     foldersInSystem: [],
@@ -26,6 +31,10 @@ const STATES = {
     renameBoxState: false,
     renameBoxFilePath: "",
     currentFileName: "",
+
+    folderRenameBoxState: false,
+    folderRenameBoxFolderPath: "",
+    currentFolder: "",
 };
 //---------------------------------------------------------------------------------
 //----------------------------->>>>FETCH_FUNCTIONS<<<<-----------------------------
@@ -65,9 +74,12 @@ const showDirs = () => {
             reFetchCurrent(newFolder)
         });
 
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete Folder";
+        const folderBtnBox = document.createElement("div");
+        folderBtnBox.classList.add("folder-element-btn-box");
 
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
         deleteButton.addEventListener('click', async () => {
             console.log(DataSystem.currentFolder)
             const response = await fetch(`/delete${DataSystem.currentDownloadLink}/${item}`, {
@@ -80,7 +92,16 @@ const showDirs = () => {
                 alert('File deletion failed');
             };
         });
-        folderBox.append(element, deleteButton)
+
+        const renameButton = document.createElement("button");
+        renameButton.textContent = "Rename";
+        renameButton.addEventListener("click", async () => {
+            STATES.folderRenameBoxState = showAndHideBox(renamefolderBox, STATES.folderRenameBoxState);
+            STATES.folderRenameBoxFolderPath = DataSystem.currentDownloadLink + `/${item}`
+        });
+
+        folderBtnBox.append(renameButton, deleteButton)
+        folderBox.append(element, folderBtnBox)
         folderData.appendChild(folderBox)
     });
 };
@@ -117,7 +138,7 @@ const showFiles = () => {
             STATES.renameBoxFilePath = DataSystem.currentDownloadLink + `/${item}`
         });
 
-        fileBtnBox.append(deleteButton, renameButton);
+        fileBtnBox.append(renameButton, deleteButton);
         fileBox.append(element, fileBtnBox);
         fileData.appendChild(fileBox);
     });
@@ -264,4 +285,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     renameBoxCancelBtn.addEventListener('click', () => {
         STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
     });
+
+    renameFolderBoxOkBtn.addEventListener('click', async () => {
+        STATES.folderRenameBoxState = showAndHideBox(renamefolderBox, STATES.folderRenameBoxState);
+        let inputVal = ranameFolderBoxInput.value;
+        ranameFolderBoxInput.value = "";
+
+        const postData = {
+            currentFolderPath: STATES.folderRenameBoxFolderPath,
+            currentPath: DataSystem.currentDownloadLink,
+            folderName: STATES.folderRenameBoxFolderPath,
+            nameToChange: inputVal
+        };
+
+        const responce = await fetch(`/rename_folders`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData)
+        });
+        await reFetchCurrent(DataSystem.currentFolder);
+
+        let data = await responce.json();
+        alert(data.msg)
+        console.log(postData)
+    })
 });
