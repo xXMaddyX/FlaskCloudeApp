@@ -55,6 +55,7 @@ const reFetchCurrent = async (newfolder) => {
     resetFileContainers();
     showDirs();
     showFiles();
+    return;
 };
 //---------------------------------------------------------------------------------
 //------------------------------>>>>RENDER_DIRS/FILES<<<<--------------------------
@@ -87,15 +88,16 @@ const showDirs = () => {
             });
             if (response.ok) {
                 alert(`${item} deleted successfully`);
-                await reFetchCurrent(DataSystem.currentFolder);
+                reFetchCurrent(DataSystem.currentFolder);
             } else {
                 alert('File deletion failed');
             };
+            return;
         });
 
         const renameButton = document.createElement("button");
         renameButton.textContent = "Rename";
-        renameButton.addEventListener("click", async () => {
+        renameButton.addEventListener("click", () => {
             STATES.folderRenameBoxState = showAndHideBox(renamefolderBox, STATES.folderRenameBoxState);
             STATES.folderRenameBoxFolderPath = DataSystem.currentDownloadLink + `/${item}`
         });
@@ -129,11 +131,12 @@ const showFiles = () => {
             } else {
                 alert('File deletion failed');
             };
+            return;
         });
 
         const renameButton = document.createElement("button");
         renameButton.textContent = "Rename";
-        renameButton.addEventListener("click", async () => {
+        renameButton.addEventListener("click", () => {
             STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
             STATES.renameBoxFilePath = DataSystem.currentDownloadLink + `/${item}`
         });
@@ -178,7 +181,8 @@ const createFolder = async () => {
         }
     } else {
         alert("Folder name cannot be empty.");
-    }
+    };
+    return;
 };
 //----------------------------------------------------------------------------------
 //----------------------------->>>>UPLOAD_FILES<<<<---------------------------------
@@ -256,6 +260,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             alert("You are already at the root folder!");
         };
+        return;
     });
 
     renameBoxOkBtn.addEventListener('click', async () => {
@@ -279,7 +284,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         await reFetchCurrent(DataSystem.currentFolder);
         let data = await responce.json();
-        alert(data.msg)
+        alert(data.msg);
+        return;
     });
 
     renameBoxCancelBtn.addEventListener('click', () => {
@@ -309,6 +315,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let data = await responce.json();
         alert(data.msg);
+        return;
     });
     renameFolderBoxCancelBtn.addEventListener('click', () => {
         STATES.folderRenameBoxState = showAndHideBox(renamefolderBox, STATES.folderRenameBoxState);
