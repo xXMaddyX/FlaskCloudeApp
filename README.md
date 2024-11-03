@@ -20,8 +20,8 @@ A complete file management system built with Flask, featuring a fully functional
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/flask-file-manager.git
-    cd flask-file-manager
+    git clone https://github.com/xXMaddyX/FlaskCloudeApp.git
+    cd FlaskCloudeApp
     ```
 
 2. Install the required dependencies:
