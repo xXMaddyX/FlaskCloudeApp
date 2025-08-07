@@ -277,10 +277,6 @@ body {
     transition-property: "visibility", "opacity";
     transition-duration: 0.5s;
 }
-.open{
-    visibility: visible;
-    opacity: 1;
-}
 
 .app-rename-file-box-content {
     display: flex;

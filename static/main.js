@@ -66,7 +66,7 @@ const showDirs = () => {
     
         const element = document.createElement("li");
         element.innerHTML = `<a class="folder">(DIR): ${item}</a>`
-        element.addEventListener("click", async () => {
+        element.addEventListener("click", () => {
             DataSystem.prevFolders.push(item);
 
             const newFolder = DataSystem.currentFolder + `/${item}`;
@@ -78,10 +78,7 @@ const showDirs = () => {
         const folderBtnBox = document.createElement("div");
         folderBtnBox.classList.add("folder-element-btn-box");
 
-
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener('click', async () => {
+        const deleteDownload = async () => {
             console.log(DataSystem.currentFolder)
             const response = await fetch(`/delete${DataSystem.currentDownloadLink}/${item}`, {
                 method: 'DELETE',  
@@ -92,7 +89,12 @@ const showDirs = () => {
             } else {
                 alert('File deletion failed');
             };
-            return;
+        }
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener('click', () => {
+            deleteDownload();
         });
 
         const renameButton = document.createElement("button");
@@ -121,7 +123,8 @@ const showFiles = () => {
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
-        deleteButton.addEventListener('click', async () => {
+
+        const deleteAsync = async () => {
             const response = await fetch(`/delete${DataSystem.currentDownloadLink}/${item}`, {
                 method: 'DELETE',  
             });
@@ -132,6 +135,9 @@ const showFiles = () => {
                 alert('File deletion failed');
             };
             return;
+        }
+        deleteButton.addEventListener('click', () => {
+            deleteAsync()
         });
 
         const renameButton = document.createElement("button");
@@ -232,8 +238,8 @@ const uploadFiles = async () => {
 
 //----------------------------------------------------------------------------------
 //------------------------->>>>ON_DOM_CONETENT_LOADED<<<<---------------------------
-document.addEventListener("DOMContentLoaded", async () => {
-    await fetchOntartup()
+document.addEventListener("DOMContentLoaded", () => {
+    fetchOntartup()
 
     uploadButton.addEventListener('click', () => {
         uploadFiles();
@@ -242,8 +248,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     createFolderButton.addEventListener('click', () => {
         createFolder();
     });
-
-    folderBackButton.addEventListener("click", async () => {
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    const folderBackButtonCallAsync = async () => {
         if (DataSystem.prevFolders.length > 0) {
             const lastFolder = DataSystem.prevFolders.pop();
     
@@ -260,10 +267,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             alert("You are already at the root folder!");
         };
-        return;
+    }
+    folderBackButton.addEventListener("click", () => {
+        folderBackButtonCallAsync();
     });
-
-    renameBoxOkBtn.addEventListener('click', async () => {
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    const RenameBoxOkBtnCallAsync = async() => {
         STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
         let inputVal = renameBoxInput.value;
         renameBoxInput.value = "";
@@ -285,14 +295,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         await reFetchCurrent(DataSystem.currentFolder);
         let data = await responce.json();
         alert(data.msg);
-        return;
+    }
+    renameBoxOkBtn.addEventListener('click', () => {
+        RenameBoxOkBtnCallAsync();
     });
-
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     renameBoxCancelBtn.addEventListener('click', () => {
         STATES.renameBoxState = showAndHideBox(renameBox, STATES.renameBoxState);
     });
-
-    renameFolderBoxOkBtn.addEventListener('click', async () => {
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    const renameFolderButtonCallAsync = async() => {
         STATES.folderRenameBoxState = showAndHideBox(renamefolderBox, STATES.folderRenameBoxState);
         let inputVal = ranameFolderBoxInput.value;
         ranameFolderBoxInput.value = "";
@@ -315,8 +329,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let data = await responce.json();
         alert(data.msg);
-        return;
+    }
+    renameFolderBoxOkBtn.addEventListener('click', () => {
+        renameFolderButtonCallAsync();
     });
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     renameFolderBoxCancelBtn.addEventListener('click', () => {
         STATES.folderRenameBoxState = showAndHideBox(renamefolderBox, STATES.folderRenameBoxState);
     });
